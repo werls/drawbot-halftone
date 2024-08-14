@@ -22,21 +22,21 @@ def main():
 
     args = parser.parse_args()
 
-    # Convert angle to radians
-    angle_in_radians = radians(args.angle)
+    path = args.path
+
+    settings = {
+        'resolution': args.resolution,
+        'contrast': args.contrast,
+        'angle': radians(args.angle),
+        'verbose': args.verbose,
+        'save': args.save,
+        'use_honeycomb_grid': args.honeycomb
+    }
 
     newDrawing()
 
     # Instantiate and run the Reticulate class
-    halftone = Halftone(
-        path=args.path,
-        resolution=args.resolution,
-        contrast=args.contrast,
-        angle=angle_in_radians,
-        verbose=args.verbose,
-        save=args.save,
-        honeycomb=args.honeycomb
-    )
+    halftone = Halftone(path, settings)
 
     endDrawing()
 
