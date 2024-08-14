@@ -13,12 +13,14 @@ def main():
                         help='The contrast of the halftone dots. Defaults to 1.')
     parser.add_argument('--angle', type=float, default=45,
                         help='The angle of rotation for the halftone dots in degrees. Defaults to 45.')
-    parser.add_argument('--verbose', type=bool, default=True,
+    parser.add_argument('--verbose', type=lambda x: (str(x).lower() == 'true'), default=True,
                         help='Enable verbose output. Defaults to True.')
-    parser.add_argument('--save', type=bool, default=True,
+    parser.add_argument('--save', type=lambda x: (str(x).lower() == 'true'), default=True,
                         help='Save the image as a PDF file. Defaults to True.')
-    parser.add_argument('--honeycomb', type=bool, default=True,
+    parser.add_argument('--honeycomb', type=lambda x: (str(x).lower() == 'true'), default=True,
                         help='Use a honeycomb grid. Defaults to True.')
+    parser.add_argument('--reescale_image', type=lambda x: (str(x).lower() == 'true'), default=False,
+                        help='Rescale the image to fit the page. Defaults to False.')
 
     args = parser.parse_args()
 
@@ -30,7 +32,8 @@ def main():
         'angle': radians(args.angle),
         'verbose': args.verbose,
         'save': args.save,
-        'use_honeycomb_grid': args.honeycomb
+        'use_honeycomb_grid': args.honeycomb,
+        'reescale_image': args.reescale_image
     }
 
     newDrawing()
