@@ -21,6 +21,8 @@ def main():
                         help='Use a honeycomb grid. Defaults to True.')
     parser.add_argument('--reescale_image', type=lambda x: (str(x).lower() == 'true'), default=False,
                         help='Rescale the image to fit the page. Defaults to False.')
+    parser.add_argument('--inverted', type=lambda x: (str(x).lower() == 'true'), default=False,
+                        help='Invert the color. Defaults to False.')
 
     args = parser.parse_args()
 
