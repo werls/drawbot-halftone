@@ -21,13 +21,13 @@ class Halftone:
     
     if not os.path.exists(path):
       raise FileNotFoundError(f"File not found: {path}")
-    
+
     self.default_settings = {
       'resolution': 100,
       'contrast': 1,
       'angle': radians(45),
       'size_threshold': 0,
-      'inverted': False,
+      'inverse': False,
       'verbose': True,
       'save': True,
       'use_honeycomb_grid': True,
@@ -103,7 +103,7 @@ class Halftone:
       self.save = self.settings['save']
       self.use_honeycomb_grid = self.settings['use_honeycomb_grid']
       self.reescale_image = self.settings['reescale_image']
-      self.is_inverted = self.settings['inverted']
+      self.is_inverse = self.settings['inverse']
   
   def _map_range(self, value, start1, stop1, start2, stop2):
     return (value - start1) / (stop1 - start1) * (stop2 - start2) + start2
@@ -190,8 +190,8 @@ class Halftone:
         average_color = (r + g + b) / 3
         
         # Define a new dot_size based on red value
-        range_start = 1 - 2 * self.is_inverted # 1 if inverted, -1 if not
-        range_end = self.is_inverted # 0 if inverted, 1 if not
+        range_start = 1 - 2 * self.is_inverse # 1 if inverse, -1 if not
+        range_end = self.is_inverse # 0 if inverse, 1 if not
         new_dot_size = self._map_range(average_color, range_start, range_end, 0, self.dot_size) * self.contrast
 
         # Don't draw if new_dot_size is small or equal to the size threshold
