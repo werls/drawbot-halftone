@@ -27,7 +27,7 @@ def main():
                         help='Rescale the image to fit the page. Defaults to False.')
     parser.add_argument('--inverse', type=str2bool, nargs='?', const=True, default=False,
                         help='Invert the color. Defaults to False.')
-    parser.add_argument('--settings', type=str, help='A JSON string or file path of settings for the halftone effect.')
+    parser.add_argument('--preset', type=str, help='A JSON string or file path of settings for the halftone effect.')
 
     args = parser.parse_args()
     path = args.path
@@ -43,13 +43,13 @@ def main():
         'inverse': args.inverse
     }
 
-    if args.settings:
+    if args.preset:
         try:
-            with open(args.settings, 'r') as file:
-                file_settings = json.load(file)
-            settings.update(file_settings)
+            with open(args.preset, 'r') as file:
+                preset = json.load(file)
+            settings.update(preset)
         except FileNotFoundError:
-            settings.update(json.loads(args.settings))
+            settings.update(json.loads(args.preset))
 
     newDrawing()
 
