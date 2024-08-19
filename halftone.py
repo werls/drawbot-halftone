@@ -35,7 +35,7 @@ class Halftone:
       'default_size': (595, 842)
     }
     
-    self._updateSettings(settings)
+    self._update_settings(settings)
 
     print("Settings:", self.settings)
 
@@ -78,7 +78,7 @@ class Halftone:
       print(f"Filename: {self.path} \nImage size: {self.w} x {self.h} \nResolution: {self.resolution} \nContrast: {self.contrast} \nAngle: {degrees(self.angle)} degrees \nSize threshold: {self.size_threshold} \nUse honeycomb grid: {self.use_honeycomb_grid} \nReescale image: {self.reescale_image}")
       print(f"Time taken: {self.time_taken:.2f} seconds")
 
-  def _updateSettings(self, settings):
+  def _update_settings(self, settings):
       """
       Updates the settings with the default settings.
       
