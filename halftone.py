@@ -3,6 +3,7 @@ from tile import Tile
 import os
 import time
 import datetime
+import json
 
 class Halftone:
   """
@@ -25,7 +26,8 @@ class Halftone:
       'resolution': 100,
       'contrast': 1,
       'angle': radians(45),
-      'size_threshold': 1,
+      'size_threshold': 0,
+      'inverted': False,
       'verbose': True,
       'save': True,
       'use_honeycomb_grid': True,
@@ -34,6 +36,8 @@ class Halftone:
     }
     
     self._updateSettings(settings)
+
+    print("Settings:", self.settings)
 
     # Get the image size
     image_width, image_height = imageSize(self.path)
@@ -99,6 +103,7 @@ class Halftone:
       self.save = self.settings['save']
       self.use_honeycomb_grid = self.settings['use_honeycomb_grid']
       self.reescale_image = self.settings['reescale_image']
+      self.is_inverted = self.settings['inverted']
   
   def _map_range(self, value, start1, stop1, start2, stop2):
     return (value - start1) / (stop1 - start1) * (stop2 - start2) + start2
@@ -185,14 +190,18 @@ class Halftone:
         average_color = (r + g + b) / 3
         
         # Define a new dot_size based on red value
-        new_dot_size = self._map_range(average_color, 1, 0, 0, self.dot_size) * self.contrast
-        
+        range_start = 1 - 2 * self.is_inverted # 1 if inverted, -1 if not
+        range_end = self.is_inverted # 0 if inverted, 1 if not
+        new_dot_size = self._map_range(average_color, range_start, range_end, 0, self.dot_size) * self.contrast
+
         # Don't draw if new_dot_size is small or equal to the size threshold
         if new_dot_size <= self.size_threshold:
           continue
         
+
         # t = Tile(self.dot_size * 2, self.dot_size * 2, self._map_range(new_dot_size, 0, self.dot_size, 0, 1))
         # t = Tile(self.dot_size * 2, self.dot_size * 2, 1)
+        # t = Tile(self.dot_size * 2, self.dot_size * 2, self._map_range(new_dot_size, 0, self.dot_size, 0, 1))
         # t.setPath(x_rot, y_rot)
         # t.drawPath()
         oval(x_rot - new_dot_size / 2, y_rot - new_dot_size / 2,
