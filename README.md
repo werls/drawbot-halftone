@@ -1,5 +1,7 @@
 # Drawbot Halftone
 
+![](examples/halftone_2024-08-22_20-40-06_resolution-100_contrast-1.jpg)
+
 This is an evolution of my own [basic halftone effect](https://github.com/werls/basic-drawbot-halftone) using [Drawbot](https://www.drawbot.com/).
 
 **Drawbot** is a macOS powerful tool for creating graphics and animations. It is a great tool for generative art and graphic design. This script uses Drawbot to create a halftone effect from an image.
