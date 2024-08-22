@@ -13,9 +13,11 @@ class Tile:
         if self.radius == 0:
             self.f = 1
         else:
-            self.f = self.width / map_range(radius, 3, -3, 0, self.width)
+            # self.f = self.width / map_range(radius, 0, 2, 0, self.width) # regular, do mais claro pro mais escuro
+            self.f = self.width / map_range(radius, 0, 1, 0, self.width) # regular, do mais claro pro mais escuro
+            # self.f = self.width / map_range(radius, -1, 1, 0, self.width)
         
-    def setPath(self, x, y):
+    def setPath(self, x, y):    
         self.path.moveTo((x, y + self.height / self.f))
         self.path.lineTo((x, y + self.height - self.height / self.f))
         self.path.lineTo((x + self.width / self.f, y + self.height))
