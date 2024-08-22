@@ -2,9 +2,35 @@
 
 This is an evolution of my own [basic halftone effect](https://github.com/werls/basic-drawbot-halftone) using [Drawbot](https://www.drawbot.com/).
 
-## How to
+## Usage
 
-## Parameters
+### Installation
+
+1. Clone this repository.
+
+```bash
+git clone https://github.com/werls/drawbot-halftone.git
+```
+
+2. Change to the repository directory.
+
+```bash
+cd drawbot-halftone
+```
+
+3. Install the requirements.
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Run the script.
+
+```bash
+python drawbot_halftone.py --path /path/to/image.jpg
+```
+
+### Parameters
 
 | Parameter       | Type    | Description                                      | Default |
 |-----------------|---------|--------------------------------------------------|---------|
@@ -20,6 +46,24 @@ This is an evolution of my own [basic halftone effect](https://github.com/werls/
 | --save          | bool    | Save the image to a file in /output/ folder.     | True    |
 | --preset        | string  | A JSON string or file path of settings for the halftone effect. | None |
 | --verbose       | bool    | Print the settings of the halftone effect.       | True    |
+
+### Presets
+
+You can create a JSON file with the settings for the halftone effect. Here is an example:
+
+```json
+{
+    "resolution": 100,
+    "contrast": 1,
+    "angle": 45,
+    "color": "0,0,0,1",
+    "color_mode": "rgba",
+    "honeycomb": true,
+    "reescale_image": false,
+    "save": true
+}
+```
+
 
 
 ## Example
