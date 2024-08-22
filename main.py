@@ -28,6 +28,8 @@ def main():
     parser.add_argument('--inverse', type=str2bool, nargs='?', const=True, default=False,
                         help='Invert the color. Defaults to False.')
     parser.add_argument('--preset', type=str, help='A JSON string or file path of settings for the halftone effect.')
+    parser.add_argument('--color', type=str, help='The color of the halftone dots in RGBA or CMYK format.', default='0,0,0,1')
+    parser.add_argument('--color_mode', type=str, help='The color mode of the halftone dots. (rgba or cmyk)', default='rgba')
 
     args = parser.parse_args()
     path = args.path
@@ -41,6 +43,8 @@ def main():
         'use_honeycomb_grid': args.honeycomb,
         'reescale_image': args.reescale_image,
         'inverse': args.inverse,
+        'color': [float(c) for c in args.color.split(',')],
+        'color_mode': args.color_mode
     }
 
     if args.preset:
