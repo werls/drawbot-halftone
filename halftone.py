@@ -33,7 +33,9 @@ class Halftone:
       'use_honeycomb_grid': True,
       'reescale_image': False,
       'default_size': (595, 842),
-      'dot_min_size': 0
+      'dot_min_size': 0,
+      'color': [0, 0, 0, 1],
+      'color_mode': 'rgba'
     }
     
     self._update_settings(settings)
@@ -100,6 +102,10 @@ class Halftone:
       self.use_honeycomb_grid = self.settings['use_honeycomb_grid']
       self.reescale_image = self.settings['reescale_image']
       self.is_inverse = self.settings['inverse']
+      self.color = self.settings['color']
+      self.color_mode = self.settings['color_mode']
+
+      self.color = list(map(lambda x: x / 255, self.color))
   
   def _map_range(self, value, start1, stop1, start2, stop2):
     return (value - start1) / (stop1 - start1) * (stop2 - start2) + start2
@@ -143,7 +149,11 @@ class Halftone:
     else:
       newPage(self.w, self.h)
     
-    fill(0)
+    if self.color_mode == 'cmyk':
+      cmykFill(*self.color)
+    else:
+      fill(*self.color)
+    
     translate(-self.dot_size / 2, -self.dot_size / 2)
 
     dot_spacing = max(self.w, self.h) // self.resolution
@@ -175,8 +185,8 @@ class Halftone:
         else:
           color = imagePixelColor(self.path, (x_rot, y_rot))
 
-        # if not color:
-        #   continue
+        if not color:
+          continue
         
         r, g, b, a = color
         
