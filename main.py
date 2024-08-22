@@ -11,10 +11,13 @@ def main():
     parser = argparse.ArgumentParser(
         description='Create a halftone effect using the DrawBot library.')
     parser.add_argument('--path', type=str, help='The path to the image file.')
+    # parser.add_argument('positional_path', nargs='?', help='The path to the image file.')
     parser.add_argument('--resolution', type=int, default=100,
                         help='The resolution of the halftone grid. Defaults to 100.')
     parser.add_argument('--contrast', type=float, default=1,
                         help='The contrast of the halftone dots. Defaults to 1.')
+    parser.add_argument('--dot_min_size', type=float, default=0,
+                        help='The minimum size of the halftone dots. Defaults to 0')
     parser.add_argument('--angle', type=float, default=45,
                         help='The angle of rotation for the halftone dots in degrees. Defaults to 45.')
     parser.add_argument('--verbose', type=str2bool, nargs='?', const=True, default=True,
@@ -28,11 +31,12 @@ def main():
     parser.add_argument('--inverse', type=str2bool, nargs='?', const=True, default=False,
                         help='Invert the color. Defaults to False.')
     parser.add_argument('--preset', type=str, help='A JSON string or file path of settings for the halftone effect.')
-    parser.add_argument('--color', type=str, help='The color of the halftone dots in RGBA or CMYK format.', default='0,0,0,1')
+    parser.add_argument('--color', type=str, help='The color of the halftone dots in RGBA or CMYK format.', default='0,0,0,255')
     parser.add_argument('--color_mode', type=str, help='The color mode of the halftone dots. (rgba or cmyk)', default='rgba')
+    parser.add_argument('--save-format', type=str, help='The format of the saved image. (pdf, png, jpg)', default='pdf')
 
     args = parser.parse_args()
-    path = args.path
+    path = args.path # or args.positional_path
 
     settings = {
         'resolution': args.resolution,
@@ -44,7 +48,9 @@ def main():
         'reescale_image': args.reescale_image,
         'inverse': args.inverse,
         'color': [float(c) for c in args.color.split(',')],
-        'color_mode': args.color_mode
+        'color_mode': args.color_mode,
+        'dot_min_size': args.dot_min_size,
+        'save_format': args.save_format
     }
 
     if args.preset:
