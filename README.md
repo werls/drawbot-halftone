@@ -2,9 +2,7 @@
 
 This is an evolution of my own [basic halftone effect](https://github.com/werls/basic-drawbot-halftone) using [Drawbot](https://www.drawbot.com/).
 
-## Usage
-
-### Installation
+## Installation
 
 1. Clone this repository.
 
@@ -30,7 +28,7 @@ pip install -r requirements.txt
 python drawbot_halftone.py --path /path/to/image.jpg
 ```
 
-### Parameters
+## Parameters
 
 | Parameter       | Type    | Description                                      | Default |
 |-----------------|---------|--------------------------------------------------|---------|
@@ -47,7 +45,7 @@ python drawbot_halftone.py --path /path/to/image.jpg
 | --preset        | string  | A JSON string or file path of settings for the halftone effect. | None |
 | --verbose       | bool    | Print the settings of the halftone effect.       | True    |
 
-### Presets
+## Presets
 
 You can create a JSON file with the settings for the halftone effect. Here is an example:
 
@@ -64,6 +62,11 @@ You can create a JSON file with the settings for the halftone effect. Here is an
 }
 ```
 
+The preset file can be passed as a parameter to the script.
+
+```bash
+python drawbot_halftone.py --path /path/to/image.jpg --preset /path/to/preset.json
+```
 
 
 ## Example
