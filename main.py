@@ -10,7 +10,7 @@ def str2bool(v):
 def main():
     parser = argparse.ArgumentParser(
         description='Create a halftone effect using the DrawBot library.')
-    parser.add_argument('path', type=str, help='The path to the image file.')
+    parser.add_argument('--path', type=str, help='The path to the image file.')
     parser.add_argument('--resolution', type=int, default=256,
                         help='The resolution of the halftone grid. Defaults to 100.')
     parser.add_argument('--contrast', type=float, default=1,
@@ -40,7 +40,7 @@ def main():
         'save': args.save,
         'use_honeycomb_grid': args.honeycomb,
         'reescale_image': args.reescale_image,
-        'inverse': args.inverse
+        'inverse': args.inverse,
     }
 
     if args.preset:
