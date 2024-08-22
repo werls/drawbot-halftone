@@ -11,7 +11,7 @@ class Halftone:
   
   Args:
     path (str): The path to the image file.
-    settings (dict): A dictionary of settings for the hal
+    settings (dict): A dictionary of settings for the halftone effect.
   """
   def __init__(self, path, settings):
 
@@ -32,12 +32,14 @@ class Halftone:
       'save': True,
       'use_honeycomb_grid': True,
       'reescale_image': False,
-      'default_size': (595, 842)
+      'default_size': (595, 842),
+      'dot_min_size': 0
     }
     
     self._update_settings(settings)
 
-    print("Settings:", self.settings)
+    if self.verbose:
+      print("Settings:", self.settings)
 
     # Get the image size
     image_width, image_height = imageSize(self.path)
@@ -58,6 +60,7 @@ class Halftone:
 
     # Get the image size and calculate the dot size
     self.dot_size = min(self.w, self.h) // self.resolution
+    self.dot_min_size = self.settings['dot_min_size']
     
     # Initialize the time taken attribute
     self.time_taken = 0
@@ -85,15 +88,8 @@ class Halftone:
       Args:
         settings (dict): The settings to update.
       """
-      # Print default settings and incoming settings for debugging
-      # print("Default settings:", self.default_settings)
-      # print("Incoming settings:", settings)
-      
       # Merge default settings with the provided settings
       self.settings = {**self.default_settings, **settings}
-
-      # Print the merged settings to verify the update
-      # print("Merged settings:", self.settings)
       
       self.resolution = self.settings['resolution']
       self.contrast = self.settings['contrast']
@@ -121,7 +117,8 @@ class Halftone:
     path = f'{output_dir}/reticulate_{current_time}_resolution-{self.resolution}_contrast-{self.contrast}.pdf'
     saveImage(path)
 
-    # os.system(f'open --background -a Preview {path}')
+    if self.verbose:
+      print(f"Image saved to: {path}")
 
   def _drawTile(self, width, height, radius):
     """
@@ -178,31 +175,28 @@ class Halftone:
         else:
           color = imagePixelColor(self.path, (x_rot, y_rot))
 
-        if not color:
-          continue
+        # if not color:
+        #   continue
         
         r, g, b, a = color
         
         # Only draw if RGB value is different from 0
-        if not (r > 0 or g > 0 or b > 0):
-          continue
+        # if not (r > 0 or g > 0 or b > 0):
+        #   continue
         
         average_color = (r + g + b) / 3
         
         # Define a new dot_size based on red value
         range_start = 1 - 2 * self.is_inverse # 1 if inverse, -1 if not
         range_end = self.is_inverse # 0 if inverse, 1 if not
-        new_dot_size = self._map_range(average_color, range_start, range_end, 0, self.dot_size) * self.contrast
+        new_dot_size = self._map_range(average_color, range_start, range_end, self.dot_min_size, self.dot_size) * self.contrast
 
         # Don't draw if new_dot_size is small or equal to the size threshold
-        if new_dot_size <= self.size_threshold:
-          continue
+        # if new_dot_size <= self.size_threshold:
+        #   continue
         
+        # if self.verbose:
+        #   print(f"Drawing dot at ({x_rot:.2f}, {y_rot:.2f}) with size {new_dot_size:.2f}")
 
-        # t = Tile(self.dot_size * 2, self.dot_size * 2, self._map_range(new_dot_size, 0, self.dot_size, 0, 1))
-        # t = Tile(self.dot_size * 2, self.dot_size * 2, 1)
-        # t = Tile(self.dot_size * 2, self.dot_size * 2, self._map_range(new_dot_size, 0, self.dot_size, 0, 1))
-        # t.setPath(x_rot, y_rot)
-        # t.drawPath()
         oval(x_rot - new_dot_size / 2, y_rot - new_dot_size / 2,
             new_dot_size, new_dot_size)
