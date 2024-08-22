@@ -68,6 +68,7 @@ The preset file can be passed as a parameter to the script.
 python drawbot_halftone.py --path /path/to/image.jpg --preset /path/to/preset.json
 ```
 
+In the `presets` folder, you can find some examples of preset files.
 
 ## Example
 
