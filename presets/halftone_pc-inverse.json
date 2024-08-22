@@ -1,12 +1,12 @@
 {
-  "resolution": 100,
-  "contrast": 1,
+  "resolution": 148,
+  "contrast": 1.2,
   "angle": 45,
   "size_threshold": 0,
-  "inverse": false,
+  "inverse": true,
   "verbose": true,
   "save": true,
   "use_honeycomb_grid": true,
-  "reescale_image": false,
+  "reescale_image": true,
   "default_size": [595, 842]
 }
