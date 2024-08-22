@@ -1,6 +1,6 @@
 {
-  "resolution": 148,
-  "contrast": 1.2,
+  "resolution": 256,
+  "contrast": 1.5,
   "angle": 45,
   "size_threshold": 0,
   "inverse": false,
