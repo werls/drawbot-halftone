@@ -1,6 +1,8 @@
-# Reticulate
+# Drawbot Halftone
 
 This is an evolution of my own [basic halftone effect](https://github.com/werls/basic-drawbot-halftone) using [Drawbot](https://www.drawbot.com/).
+
+**Drawbot** is a macOS powerful tool for creating graphics and animations. It is a great tool for generative art and graphic design. This script uses Drawbot to create a halftone effect from an image.
 
 ## Installation
 
@@ -68,7 +70,7 @@ The preset file can be passed as a parameter to the script.
 python drawbot_halftone.py --path /path/to/image.jpg --preset /path/to/preset.json
 ```
 
-In the `presets` folder, you can find some examples of preset files.
+In the `/presets/` folder, you can find some examples of preset files.
 
 ## Example
 
