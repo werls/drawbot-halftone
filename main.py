@@ -10,8 +10,8 @@ def str2bool(v):
 def main():
     parser = argparse.ArgumentParser(
         description='Create a halftone effect using the DrawBot library.')
+    parser.add_argument('positional_path', nargs='?', help='The path to the image file.')
     parser.add_argument('--path', type=str, help='The path to the image file.')
-    # parser.add_argument('positional_path', nargs='?', help='The path to the image file.')
     parser.add_argument('--resolution', type=int, default=100,
                         help='The resolution of the halftone grid. Defaults to 100.')
     parser.add_argument('--contrast', type=float, default=1,
@@ -36,7 +36,7 @@ def main():
     parser.add_argument('--save-format', type=str, help='The format of the saved image. (pdf, png, jpg)', default='pdf')
 
     args = parser.parse_args()
-    path = args.path # or args.positional_path
+    path = args.path or args.positional_path
 
     settings = {
         'resolution': args.resolution,
