@@ -2,7 +2,7 @@ import argparse
 import json
 from math import radians
 from drawBot import newDrawing, endDrawing
-from halftone import Halftone
+from src.halftone import Halftone
 
 def str2bool(v):
     return v.lower() in ('true', '1', 'yes')

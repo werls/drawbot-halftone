@@ -1,5 +1,5 @@
 from drawBot import *
-from tile import Tile
+from src.tile import Tile
 import os
 import time
 import datetime
