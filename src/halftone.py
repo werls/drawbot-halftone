@@ -1,10 +1,9 @@
 from drawBot import *
-from src.tile import Tile
+# from src.tile import Tile
 import os
 import time
 import datetime
-import json
-
+# import json
 
 class Halftone:
     """
@@ -16,39 +15,43 @@ class Halftone:
     """
 
     def __init__(self, path, settings):
-
+        self._validate_path(path)
         self.path = path
+        self.verbose = True
+        self.settings = settings
+        
+        self._update_settings(settings)
+        self._reescale_image()
+        
+        if self.verbose:
+          self._print_settings()
+        
+        elapsed_time = 0
+        start_time = time.time() # Keeps track of the time taken to draw the image
+
+        self._draw()
+        if self.settings['save']:
+            self._save_image()
+
+        elapsed_time = time.time() - start_time
+        print(f"Time taken: {elapsed_time:.2f} seconds")
+
+        # Print the information about the image
+        # if self.verbose:
+        # print(f"Filename: {self.path} \nImage size: {self.w} x {self.h} \nResolution: {self.resolution} \nContrast: {self.contrast} \nAngle: {degrees(self.angle)} degrees \nUse honeycomb grid: {self.use_honeycomb_grid} \nReescale image: {self.reescale_image}")
+
+    def _validate_path(self, path):
+        """
+        Validates the path to the image file.
+
+        Args:
+          path (str): The path to the image file.
+        """
         if not path:
             raise ValueError("Please provide a valid path to an image file.")
 
         if not os.path.exists(path):
             raise FileNotFoundError(f"File not found: {path}")
-
-        self._update_settings(settings)
-
-        if self.verbose:
-            print("Settings:", self.settings)
-
-        self._reescale_image()
-
-        # Initialize the time taken attribute
-        self.time_taken = 0
-        start_time = time.time()
-
-        # Draw the halftone effect
-        self._draw()
-
-        # Save the image as a PDF file
-        if self.settings['save']:
-            self._save_image()
-
-        end_time = time.time()
-        self.time_taken = end_time - start_time
-
-        # Print the information about the image
-        # if self.verbose:
-        # print(f"Filename: {self.path} \nImage size: {self.w} x {self.h} \nResolution: {self.resolution} \nContrast: {self.contrast} \nAngle: {degrees(self.angle)} degrees \nUse honeycomb grid: {self.use_honeycomb_grid} \nReescale image: {self.reescale_image}")
-        # print(f"Time taken: {self.time_taken:.2f} seconds")
 
     def _update_settings(self, settings):
         """
@@ -57,23 +60,20 @@ class Halftone:
         Args:
           settings (dict): The settings to update.
         """
-        self.settings = settings
-
+        # self.settings = settings
         self.verbose = self.settings['verbose']
-        self.settings['color'] = list(
-            map(lambda x: x / 255, self.settings['color'])
-        )  # Convert color values to the range [0, 1]
 
-    def _map_range(self, value, start1, stop1, start2, stop2):
-        return (value - start1) / (stop1 - start1) * (stop2 - start2) + start2
+        # Convert color values to the range [0, 1]
+        # to match the Drawbot's fill() function
+        self.settings['color'] = [x / 255 for x in settings['color']]
 
     def _reescale_image(self):
         image_width, image_height = imageSize(self.path)
+
         if not self.settings['reescale_image']:
             self.w, self.h = image_width, image_height
         else:
             self.im = ImageObject()
-
             with self.im:
                 size(image_width, image_height)
                 image(self.path, (0, 0))
@@ -81,7 +81,16 @@ class Halftone:
             scale_factor = min(595 / image_width, 842 / image_height)
             self.im.lanczosScaleTransform(scale=scale_factor, aspectRatio=None)
             self.w, self.h = 595, 842
-    
+
+    def _print_settings(self):
+        """
+        Prints the settings for the halftone effect.
+        """
+        for key, value in self.settings.items():
+            formatted_key = key.replace('_', ' ').capitalize()
+            print(f"{formatted_key}: {value}")
+        print("-")
+
     def _save_image(self):
         """
         Saves the halftone effect as a PDF file.
@@ -90,9 +99,7 @@ class Halftone:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        # Generate the current date and time string
         current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-
         ext = self.settings['save_format']
         contrast = self.settings['contrast']
         resolution = self.settings['resolution']
@@ -102,19 +109,19 @@ class Halftone:
 
         if self.verbose:
             print(f"Image saved to: {path}")
+    
+    # def _drawTile(self, width, height, radius):
+    #     """
+    #     Draws a single tile with the specified width, height, and radius.
 
-    def _drawTile(self, width, height, radius):
-        """
-        Draws a single tile with the specified width, height, and radius.
-
-        Args:
-          width (int): The width of the tile.
-          height (int): The height of the tile.
-          radius (int): The radius of the tile.
-        """
-        self.tile = Tile(width, height, radius)
-        self.tile.setPath(x, y)
-        self.tile.drawPath()
+    #     Args:
+    #       width (int): The width of the tile.
+    #       height (int): The height of the tile.
+    #       radius (int): The radius of the tile.
+    #     """
+    #     self.tile = Tile(width, height, radius)
+    #     self.tile.setPath(x, y)
+    #     self.tile.drawPath()
 
     def _draw(self):
         """
@@ -125,9 +132,10 @@ class Halftone:
         reescale_image = self.settings['reescale_image']
         is_inverse = self.settings['inverse']
         resolution = self.settings['resolution']
+        angle = self.settings['angle']
 
         if self.settings['reescale_image']:
-            newPage(595, 842)
+            newPage(595, 842) # need to correct this magic number
         else:
             newPage(self.w, self.h)
 
@@ -157,25 +165,19 @@ class Halftone:
                     x += (height & 1) * (dot_spacing // 2)
 
                 # Rotate dot position by the specified angle around the center of the image
-                angle = self.settings['angle']
                 center_x, center_y = self.w / 2, self.h / 2
-                x_rot = (x - center_x) * cos(angle) - \
-                    (y - center_y) * sin(angle) + center_x
-                y_rot = (x - center_x) * sin(angle) + \
-                    (y - center_y) * cos(angle) + center_y
+                dx, dy = x - center_x, y - center_y
+                x_rot = dx * cos(angle) - dy * sin(angle) + center_x
+                y_rot = dx * sin(angle) + dy * cos(angle) + center_y
 
                 # Sample the color using the rotated position
                 if not (0 <= x_rot < self.w and 0 <= y_rot < self.h):
                     continue
-
-                if reescale_image:
-                    color = imagePixelColor(self.im, (x_rot, y_rot))
-                else:
-                    color = imagePixelColor(self.path, (x_rot, y_rot))
-
-                if not color:
-                    continue
-
+                
+                color = imagePixelColor(
+                    self.im if reescale_image else self.path, (x_rot, y_rot)
+                    )
+                if not color: continue
                 r, g, b, a = color
 
                 # Only draw if RGB value is different from 0
@@ -188,7 +190,10 @@ class Halftone:
                 range_start = 1 - 2 * is_inverse  # 1 if inverse, -1 if not
                 range_end = is_inverse  # 0 if inverse, 1 if not
                 new_dot_size = self._map_range(
-                    average_color, range_start, range_end, dot_min_size, dot_size) * contrast
+                    average_color, 
+                    range_start, range_end, 
+                    dot_min_size, dot_size
+                    ) * contrast
 
                 # Don't draw if new_dot_size is small or equal to the size threshold
                 # if new_dot_size <= self.size_threshold:
@@ -197,5 +202,10 @@ class Halftone:
                 # if self.verbose:
                 #   print(f"Drawing dot at ({x_rot:.2f}, {y_rot:.2f}) with size {new_dot_size:.2f}")
 
-                oval(x_rot - new_dot_size / 2, y_rot - new_dot_size / 2,
-                     new_dot_size, new_dot_size)
+                oval(
+                    x_rot - new_dot_size / 2, y_rot - new_dot_size / 2,
+                    new_dot_size, new_dot_size
+                    )
+
+    def _map_range(self, value, start1, stop1, start2, stop2):
+            return (value - start1) / (stop1 - start1) * (stop2 - start2) + start2
