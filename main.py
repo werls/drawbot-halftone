@@ -30,10 +30,14 @@ def main():
                         help='Rescale the image to fit the page. Defaults to False.')
     parser.add_argument('--inverse', type=str2bool, nargs='?', const=True, default=False,
                         help='Invert the color. Defaults to False.')
-    parser.add_argument('--preset', type=str, help='A JSON string or file path of settings for the halftone effect.')
-    parser.add_argument('--color', type=str, help='The color of the halftone dots in RGBA or CMYK format.', default='0,0,0,255')
-    parser.add_argument('--color_mode', type=str, help='The color mode of the halftone dots. (rgba or cmyk)', default='rgba')
-    parser.add_argument('--save-format', type=str, help='The format of the saved image. (pdf, png, jpg)', default='pdf')
+    parser.add_argument('--preset', type=str, 
+                        help='A JSON string or file path of settings for the halftone effect.')
+    parser.add_argument('--color', type=str, 
+                        help='The color of the halftone dots in RGBA or CMYK format.', default='0,0,0,255')
+    parser.add_argument('--color_mode', type=str, 
+                        help='The color mode of the halftone dots. (rgba or cmyk)', default='rgba')
+    parser.add_argument('--save-format', type=str, 
+                        help='The format of the saved image. (pdf, png, jpg)', default='pdf')
 
     args = parser.parse_args()
     path = args.path or args.positional_path
@@ -62,10 +66,7 @@ def main():
             settings.update(json.loads(args.preset))
 
     newDrawing()
-
-    # Instantiate and run the Halftone class
     halftone = Halftone(path, settings)
-
     endDrawing()
 
 if __name__ == '__main__':
