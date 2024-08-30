@@ -1,13 +1,11 @@
 {
   "resolution": 512,
-  "contrast": 1,
+  "contrast": 2.5,
   "angle": 45,
   "size_threshold": 0,
   "inverse": false,
   "verbose": true,
   "save": true,
-  "use_honeycomb_grid": true,
-  "reescale": true,
-  "default_size": [595, 842],
-  "dot_min_size": 0
+  "color_mode": "cmyk",
+  "color": [0, 55, 45, 0]
 }

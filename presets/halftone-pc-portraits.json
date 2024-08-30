@@ -1,0 +1,7 @@
+{
+  "resolution": 128,
+  "contrast": 2,
+  "angle": 45,
+  "reescale": true,
+  "default_size": [300, 450]
+}
