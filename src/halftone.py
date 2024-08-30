@@ -21,7 +21,7 @@ class Halftone:
         self.settings = settings
         
         self._update_settings(settings)
-        self._reescale_image()
+        self._reescale()
         
         if self.verbose:
           self._print_settings()
@@ -31,14 +31,17 @@ class Halftone:
 
         self._draw()
         if self.settings['save']:
-            self._save_image()
+            output_dir = self.settings['output_dir'] or './output'
+            keep_original_name = self.settings['keep_original_name']
+
+            self._save_image(output_dir, keep_original_name)
 
         elapsed_time = time.time() - start_time
         print(f"Time taken: {elapsed_time:.2f} seconds")
 
         # Print the information about the image
         # if self.verbose:
-        # print(f"Filename: {self.path} \nImage size: {self.w} x {self.h} \nResolution: {self.resolution} \nContrast: {self.contrast} \nAngle: {degrees(self.angle)} degrees \nUse honeycomb grid: {self.use_honeycomb_grid} \nReescale image: {self.reescale_image}")
+        # print(f"Filename: {self.path} \nImage size: {self.w} x {self.h} \nResolution: {self.resolution} \nContrast: {self.contrast} \nAngle: {degrees(self.angle)} degrees \nUse honeycomb grid: {self.use_honeycomb_grid} \nReescale image: {self.reescale}")
 
     def _validate_path(self, path):
         """
@@ -65,12 +68,17 @@ class Halftone:
 
         # Convert color values to the range [0, 1]
         # to match the Drawbot's fill() function
-        self.settings['color'] = [x / 255 for x in settings['color']]
+        if self.settings['color_mode'] == 'rgba':
+          self.settings['color'] = [x / 255 for x in settings['color']]
+        elif self.settings['color_mode'] == 'cmyk':
+          self.settings['color'] = [x / 100 for x in settings['color']]
+        else:
+          raise ValueError("Invalid color mode. Please use 'rgba' or 'cmyk'.")
 
-    def _reescale_image(self):
+    def _reescale(self):
         image_width, image_height = imageSize(self.path)
 
-        if not self.settings['reescale_image']:
+        if not self.settings['reescale']:
             self.w, self.h = image_width, image_height
         else:
             self.im = ImageObject()
@@ -91,20 +99,25 @@ class Halftone:
             print(f"{formatted_key}: {value}")
         print("-")
 
-    def _save_image(self):
+    def _save_image(self, output_dir='./output', keep_original_name=False):
         """
         Saves the halftone effect as a PDF file.
         """
-        output_dir = './output'
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
         current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        ext = self.settings['save_format']
+        ext = self.settings['output_format']
         contrast = self.settings['contrast']
         resolution = self.settings['resolution']
 
-        path = f'{output_dir}/halftone_{current_time}_resolution-{resolution}_contrast-{contrast}.{ext}'
+        if keep_original_name:
+            filename = os.path.basename(self.path)
+            name, _ = os.path.splitext(filename)
+            path = f'{output_dir}/{name}_halftone_{current_time}_resolution-{resolution}_contrast-{contrast}.{ext}'
+        else:
+            path = f'{output_dir}/halftone_{current_time}_resolution-{resolution}_contrast-{contrast}.{ext}'
+            
         saveImage(path)
 
         if self.verbose:
@@ -129,12 +142,12 @@ class Halftone:
         """
         contrast = self.settings['contrast']
         honeycomb = self.settings['use_honeycomb_grid']
-        reescale_image = self.settings['reescale_image']
+        reescale = self.settings['reescale']
         is_inverse = self.settings['inverse']
         resolution = self.settings['resolution']
         angle = self.settings['angle']
 
-        if self.settings['reescale_image']:
+        if self.settings['reescale']:
             newPage(595, 842) # need to correct this magic number
         else:
             newPage(self.w, self.h)
@@ -175,7 +188,7 @@ class Halftone:
                     continue
                 
                 color = imagePixelColor(
-                    self.im if reescale_image else self.path, (x_rot, y_rot)
+                    self.im if reescale else self.path, (x_rot, y_rot)
                     )
                 if not color: continue
                 r, g, b, a = color
