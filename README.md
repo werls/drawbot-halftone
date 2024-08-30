@@ -72,4 +72,12 @@ The preset file can be passed as a parameter to the script.
 python drawbot_halftone.py --path /path/to/image.jpg --preset /path/to/preset.json
 ```
 
-In the `/presets/` folder, you can find some examples of preset files.
+In the `/presets/` folder you can find some examples of preset files.
+
+## Batch processing with presets
+
+You can use the following command to apply the halftone effect to all images in a folder, using a preset:
+
+```bash
+for file in folder/*; do python main.py --path "$file" --preset=presets/halftone-pc-portraits.json; done
+```
