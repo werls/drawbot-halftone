@@ -3,5 +3,7 @@
   "contrast": 2,
   "angle": 45,
   "reescale": true,
-  "default_size": [300, 450]
+  "default_size": [300, 450],
+  "color_mode": "cmyk",
+  "color": [100, 67, 0, 23]
 }
