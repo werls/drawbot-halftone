@@ -5,7 +5,6 @@
   "size_threshold": 0,
   "inverse": false,
   "verbose": true,
-  "save": true,
   "color_mode": "cmyk",
   "color": [0, 55, 45, 0]
 }

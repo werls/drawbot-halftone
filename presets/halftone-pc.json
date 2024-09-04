@@ -5,7 +5,6 @@
   "size_threshold": 0,
   "inverse": false,
   "verbose": true,
-  "save": true,
   "use_honeycomb_grid": true,
   "reescale_image": true,
   "default_size": [595, 842],
