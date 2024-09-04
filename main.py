@@ -63,6 +63,8 @@ def main():
         'keep_original_name': args.keep_original_name
     }
 
+    print(args.color_mode)
+
     if args.preset:
         # incluir uma checagem para verificar se o path é válido
 
