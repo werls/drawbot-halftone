@@ -76,7 +76,7 @@ In the `/presets/` folder you can find some examples of preset files.
 
 ## Batch processing with presets
 
-You can use the following command to apply the halftone effect to all images in a folder, using a preset:
+You can use the following command to process multiple images with the same preset. 
 
 ```bash
 for file in folder/*; do python main.py --path "$file" --preset=presets/halftone-pc-portraits.json; done
